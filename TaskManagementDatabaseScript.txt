@@ -1,0 +1,368 @@
+Database
+
+USE [master]
+GO
+/****** Object:  Database [TaskManagementDataBase]    Script Date: 8/18/2025 10:53:44 PM ******/
+CREATE DATABASE [TaskManagementDataBase]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'TaskManagementDataBase', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\TaskManagementDataBase.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'TaskManagementDataBase_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\TaskManagementDataBase_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [TaskManagementDataBase] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [TaskManagementDataBase].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET RECOVERY FULL 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET  MULTI_USER 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [TaskManagementDataBase] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [TaskManagementDataBase] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'TaskManagementDataBase', N'ON'
+GO
+ALTER DATABASE [TaskManagementDataBase] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [TaskManagementDataBase] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [TaskManagementDataBase]
+GO
+/****** Object:  UserDefinedFunction [dbo].[IsThereAnyOldTaskInTheNewTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [dbo].[IsThereAnyOldTaskInTheNewTask]
+(
+	@TaskID int,
+    @EndDateTime DATETIME,
+	@StartDateAndTime DATETIME
+)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @Result BIT = 0;
+    
+    IF EXISTS (
+        SELECT 1
+        FROM Task
+        WHERE TaskDateAndTime BETWEEN @StartDateAndTime AND @EndDateTime
+		AND Task_ID <> @TaskID
+    )
+    BEGIN
+        SET @Result = 1;
+    END
+    
+    RETURN @Result;
+END
+GO
+/****** Object:  UserDefinedFunction [dbo].[IsTheTaskEndInAnotherTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [dbo].[IsTheTaskEndInAnotherTask]
+(
+	@TaskID int,
+    @TakesTimeInMin DATETIME
+)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @Result BIT = 0;
+    
+    IF EXISTS (
+        SELECT 1
+        FROM Task
+        WHERE @TakesTimeInMin BETWEEN TaskDateAndTime AND DATEADD(MINUTE, TakesTime, TaskDateAndTime)
+		AND Task_ID <> @TaskID
+    )
+    BEGIN
+        SET @Result = 1;
+    END
+    
+    RETURN @Result;
+END
+GO
+/****** Object:  UserDefinedFunction [dbo].[IsTheTaskStartInAnotherTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [dbo].[IsTheTaskStartInAnotherTask]
+(
+	@TaskID int,
+    @StartDateAndTime DATETIME
+)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @Result BIT = 0;
+    
+    IF EXISTS (
+        SELECT 1 
+        FROM Task 
+        WHERE @StartDateAndTime BETWEEN TaskDateAndTime AND DATEADD(MINUTE, TakesTime, TaskDateAndTime)
+		AND Task_ID <> @TaskID
+    )
+    BEGIN
+        SET @Result = 1;
+    END
+    
+    RETURN @Result;
+END
+GO
+/****** Object:  Table [dbo].[Task]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Task](
+	[Task_ID] [int] IDENTITY(1,1) NOT NULL,
+	[TaskName] [nvarchar](30) NOT NULL,
+	[TaskDescription] [nvarchar](max) NOT NULL,
+	[TaskDateAndTime] [datetime] NOT NULL,
+	[TakesTime] [smallint] NOT NULL,
+	[Details] [nvarchar](max) NULL,
+ CONSTRAINT [PK__Task__716F4ACDE4B75D81] PRIMARY KEY CLUSTERED 
+(
+	[Task_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_AddNewTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[PRO_AddNewTask]
+    @Name nvarchar(30),
+    @Description nvarchar(max),
+    @DateAndTime datetime,
+    @TakesTime smallint,
+    @Details nvarchar(max)
+AS
+BEGIN
+    INSERT INTO [dbo].[Task]
+        ([TaskName], [TaskDescription], [TaskDateAndTime], [TakesTime], [Details] )
+    VALUES
+        (@Name, @Description, @DateAndTime, @TakesTime, @Details );
+
+    SELECT SCOPE_IDENTITY() AS NewTaskID;
+END
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_DeleteTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE proc [dbo].[PRO_DeleteTask]
+@TaskID int
+as
+DELETE FROM Task WHERE Task_ID = @TaskID
+
+   IF @@ROWCOUNT > 0
+        SELECT 1 AS DeletedSuccessfully;  
+    ELSE
+        SELECT 0 AS DeletedSuccessfully; 
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_FindTaskByID]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create proc [dbo].[PRO_FindTaskByID]
+@TaskID int
+
+as
+select * from Task where Task_ID = @TaskID
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_GetPageOfActiveTasks]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create PROC [dbo].[PRO_GetPageOfActiveTasks]
+    @PageNumber INT ,
+    @PageSize   INT 
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM Task
+    WHERE TaskDateAndTime > GETDATE()
+    ORDER BY TaskDateAndTime ASC   -- الأقرب للمستقبل أولاً
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_GetPageOfPastTasks]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create PROC [dbo].[PRO_GetPageOfPastTasks]
+    @PageNumber INT ,
+    @PageSize   INT 
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM Task
+    WHERE TaskDateAndTime < GETDATE()
+    ORDER BY TaskDateAndTime DESC  
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_GetPageOfTasks]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create PROC [dbo].[PRO_GetPageOfTasks]
+    @PageNumber INT ,
+    @PageSize   INT 
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT *
+    FROM Task
+    ORDER BY Task_ID ASC
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+END
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_IsThereAnyTaskConflict]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[PRO_IsThereAnyTaskConflict]
+	@TaskID int,
+    @StartDateAndTime datetime,
+    @TakesTimeInMin smallint
+AS
+BEGIN
+    DECLARE @ResultCode int = 0;
+	DECLARE @EndDateTime DATETIME = DATEADD(MINUTE, @TakesTimeInMin, @StartDateAndTime);
+
+    IF dbo.IsTheTaskStartInAnotherTask(@TaskID,@StartDateAndTime) = 1
+	BEGIN
+		SET @ResultCode = 1;
+	END
+
+    IF dbo.IsTheTaskEndInAnotherTask(@TaskID,@EndDateTime) = 1 
+    BEGIN
+        IF @ResultCode = 1
+            SET @ResultCode = 4;
+        ELSE
+            SET @ResultCode = 2;
+    END
+
+    IF dbo.IsThereAnyOldTaskInTheNewTask(@TaskID,@EndDateTime,@StartDateAndTime) = 1
+    BEGIN
+        IF @ResultCode = 0
+            SET @ResultCode = 3;
+        ELSE IF @ResultCode <> 4
+            SET @ResultCode = 4;
+    END
+
+    SELECT @ResultCode AS ConflictCode;
+END
+GO
+/****** Object:  StoredProcedure [dbo].[PRO_UpdateTask]    Script Date: 8/18/2025 10:53:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[PRO_UpdateTask]
+    @Task_ID int,
+    @Name nvarchar(30),
+    @Description nvarchar(max),
+    @DateAndTime datetime,
+    @TakesTime smallint,
+    @Details nvarchar(max)
+AS
+BEGIN
+    UPDATE [dbo].[Task]
+    SET
+        [TaskName] = @Name,
+        [TaskDescription] = @Description,
+        [TaskDateAndTime] = @DateAndTime,
+        [TakesTime] = @TakesTime,
+        [Details] = @Details
+    WHERE
+        [Task_ID] = @Task_ID;
+END
+GO
+USE [master]
+GO
+ALTER DATABASE [TaskManagementDataBase] SET  READ_WRITE 
+GO

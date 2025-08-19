@@ -1,0 +1,34 @@
+Demo data 20 record
+
+USE [TaskManagementDataBase]
+GO
+
+INSERT INTO [dbo].[Task]
+           ([TaskName]
+           ,[TaskDescription]
+           ,[TaskDateAndTime]
+           ,[TakesTime]
+           ,[Details]
+           ,[ReminderMyBefore])
+VALUES
+('Write Report', 'Prepare the monthly financial report', DATEADD(DAY, 1, GETDATE()), 120, 'Include sales and expenses', 30),
+('Team Meeting', 'Weekly sync with the development team', DATEADD(DAY, 2, GETDATE()), 60, 'Focus on sprint backlog', 15),
+('Code Review', 'Review pull requests from junior devs', DATEADD(DAY, 3, GETDATE()), 90, 'Check coding standards', 20),
+('Database Backup', 'Perform full database backup', DATEADD(DAY, -1, GETDATE()), 180, 'Store in secure server', 60),
+('Presentation', 'Prepare slides for client meeting', DATEADD(DAY, 5, GETDATE()), 150, 'Add graphs and charts', 45),
+('Deploy App', 'Push new release to production', DATEADD(DAY, -2, GETDATE()), 60, 'Ensure zero downtime', 10),
+('Bug Fixing', 'Fix reported bugs from QA team', DATEADD(DAY, 4, GETDATE()), 200, 'Prioritize critical issues', 30),
+('Research', 'Investigate new tech stack options', DATEADD(DAY, 6, GETDATE()), 240, 'Prepare summary document', 60),
+('Documentation', 'Update API documentation', DATEADD(DAY, -3, GETDATE()), 180, 'Include new endpoints', 20),
+('Security Audit', 'Run penetration testing', DATEADD(DAY, 7, GETDATE()), 300, 'Generate security report', 60),
+('Data Cleanup', 'Remove obsolete records', DATEADD(DAY, -4, GETDATE()), 120, 'Archive before deleting', 30),
+('Training', 'Conduct training for new hires', DATEADD(DAY, 8, GETDATE()), 240, 'Cover internal tools', 15),
+('System Upgrade', 'Upgrade server OS', DATEADD(DAY, -5, GETDATE()), 360, 'Schedule downtime', 60),
+('Testing', 'Regression testing before release', DATEADD(DAY, 9, GETDATE()), 300, 'Automated + manual tests', 45),
+('Client Call', 'Discuss project requirements', DATEADD(DAY, 10, GETDATE()), 90, 'Take meeting notes', 10),
+('Server Monitoring', 'Check server logs for issues', DATEADD(DAY, -6, GETDATE()), 60, 'Report anomalies', 20),
+('Design Review', 'Review UI/UX designs', DATEADD(DAY, 11, GETDATE()), 120, 'Suggest improvements', 15),
+('Integration', 'Integrate third-party API', DATEADD(DAY, 12, GETDATE()), 240, 'Test API endpoints', 30),
+('Backup Verification', 'Verify backup integrity', DATEADD(DAY, -7, GETDATE()), 180, 'Check randomly', 45),
+('Planning', 'Prepare roadmap for next quarter', DATEADD(DAY, 13, GETDATE()), 300, 'Get approval from management', 60);
+GO
