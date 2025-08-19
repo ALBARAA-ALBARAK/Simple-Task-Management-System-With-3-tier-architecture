@@ -1,0 +1,24 @@
+# Folders
+bin/
+obj/
+.vs/
+
+# Build outputs
+*.dll
+*.pdb
+*.exe
+
+# Cache files
+*.cache
+*.log
+
+# User-specific
+*.user
+*.suo
+*.vspscc
+*.vssscc
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
