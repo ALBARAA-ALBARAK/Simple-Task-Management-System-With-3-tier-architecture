@@ -1,0 +1,12 @@
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\bin\Debug\net8.0\TaskManagementDataAccessLayer.deps.json
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\bin\Debug\net8.0\TaskManagementDataAccessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\bin\Debug\net8.0\TaskManagementDataAccessLayer.pdb
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.csproj.AssemblyReference.cache
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.AssemblyInfoInputs.cache
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.AssemblyInfo.cs
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\refint\TaskManagementDataAccessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\TaskManagementDataAccessLayer.pdb
+C:\Users\bara3\source\repos\TaskManagementDataAccessLayer\obj\Debug\net8.0\ref\TaskManagementDataAccessLayer.dll
