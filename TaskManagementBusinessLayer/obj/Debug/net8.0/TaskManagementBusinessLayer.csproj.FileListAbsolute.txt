@@ -1,0 +1,15 @@
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\bin\Debug\net8.0\TaskManagementBusinessLayer.deps.json
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\bin\Debug\net8.0\TaskManagementBusinessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\bin\Debug\net8.0\TaskManagementBusinessLayer.pdb
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\bin\Debug\net8.0\TaskManagementDataAccessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\bin\Debug\net8.0\TaskManagementDataAccessLayer.pdb
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.csproj.AssemblyReference.cache
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.AssemblyInfoInputs.cache
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.AssemblyInfo.cs
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.csproj.CoreCompileInputs.cache
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskMana.14197274.Up2Date
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\refint\TaskManagementBusinessLayer.dll
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\TaskManagementBusinessLayer.pdb
+C:\Users\bara3\source\repos\TaskManagementBusinessLayer\obj\Debug\net8.0\ref\TaskManagementBusinessLayer.dll
